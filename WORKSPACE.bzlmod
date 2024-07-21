@@ -10,7 +10,3 @@ http_archive(
 load("@bazel_jdt_java_toolchain//jdt:repositories.bzl", "rules_jdt_dependencies", "rules_jdt_toolchains")
 rules_jdt_dependencies()
 rules_jdt_toolchains()
-
-register_toolchains(
-    "@bazel_jdt_java_toolchain//jdt:all"
-)
