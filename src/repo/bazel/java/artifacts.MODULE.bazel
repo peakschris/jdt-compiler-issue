@@ -1,0 +1,1 @@
+include("//src/repo/bazel/java:maven.MODULE.bazel")

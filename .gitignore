@@ -1,0 +1,5 @@
+bazel-*
+temp
+.venv
+.bazelrc.plat
+MODULE.bazel.lock

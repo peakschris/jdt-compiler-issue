@@ -1,0 +1,16 @@
+load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
+JDT_TAG="823979774ae466febceb89dcd81ddfb6caaea5df"
+JDT_INTEGRITY="sha256-GHrR58COVS4+ITy8gt10q96m8f1F+RQRTUYAbsHGjDA="
+http_archive(
+    name = "bazel_jdt_java_toolchain",
+    strip_prefix = "bazel-jdt-java-toolchain-"+JDT_TAG,
+    urls = ["https://github.com/peakschris/bazel-jdt-java-toolchain/archive/"+JDT_TAG+".zip"],
+    integrity = JDT_INTEGRITY,
+)
+load("@bazel_jdt_java_toolchain//jdt:repositories.bzl", "rules_jdt_dependencies", "rules_jdt_toolchains")
+rules_jdt_dependencies()
+rules_jdt_toolchains()
+
+register_toolchains(
+    "@bazel_jdt_java_toolchain//jdt:all"
+)

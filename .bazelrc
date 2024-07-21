@@ -1,0 +1,25 @@
+#####################################################################################
+# JAVA related settings
+#####################################################################################
+# Default java flags
+common --java_language_version=17
+common --java_runtime_version=remotejdk_17
+common --tool_java_language_version=17
+common --tool_java_runtime_version=remotejdk_17
+
+# Point tools such as coursier (used in rules_jvm_external) to Bazel's downloaded JDK
+# suggested in https://github.com/bazelbuild/rules_jvm_external/issues/445
+startup --noautodetect_server_javabase
+common --repo_env=JAVA_HOME=../bazel_tools/jdk
+common --action_env=JAVA_HOME=../bazel_tools/jdk
+
+# JDT settings
+common --extra_toolchains=@bazel_jdt_java_toolchain//jdt:all
+# disable header compilation (does not work with classpath trick done by 'java17_toolchain_with_javax21api_definition')
+build --nojava_header_compilation
+
+######################################################################################################
+# User/unit customization
+######################################################################################################
+# Read user options
+try-import %workspace%/.bazelrc.user

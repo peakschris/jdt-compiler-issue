@@ -1,0 +1,26 @@
+java_library(
+    name = "comparitor-lib",
+    srcs = glob(["src/**/*.java"]),
+    deps = [
+        "@maven//:com_google_guava_guava",
+    ],
+)
+
+java_binary(
+    name = "comparitor",
+    srcs = ["src/com/example/comparitor/Main.java"],
+    main_class = "com.example.comparitor.Main",
+    deps = ["comparitor-lib"],
+)
+
+java_test(
+    name = "tests",
+    srcs = glob(["test/com/example/comparitor/*.java"]),
+    test_class = "com.example.comparitor.TestMath",
+    deps = [
+        ":comparitor-lib",
+        "@maven//:com_google_guava_guava",
+        "@maven//:junit_junit",
+    ],
+    size = "small",
+)

@@ -1,0 +1,88 @@
+#################################################################
+# Platforms
+#################################################################
+bazel_dep(name = "platforms", version = "0.0.10")
+
+
+#################################################################
+# Aspect lib has improved binary generation rules & utils.
+#################################################################
+bazel_dep(name = "aspect_bazel_lib", version = "2.7.7")
+
+
+#################################################################
+# Implicit dependencies
+# These dependencies are required by bazel itself
+#################################################################
+bazel_dep(name = "bazel_skylib", version = "1.6.1")
+bazel_dep(name = "protobuf", version = "26.0")
+bazel_dep(name = "rules_cc", version = "0.0.9")
+
+
+#################################################################
+# Hermetic Java toolchain
+#################################################################
+bazel_dep(name = "rules_java", version = "7.6.1")
+bazel_dep(name = "rules_jni", version = "0.9.1", repo_name = "fmeum_rules_jni")
+
+
+#################################################################
+# Rules jvm_external (Maven/Bazel)
+#################################################################
+bazel_dep(name = "rules_jvm_external", version = "6.1")
+
+
+#################################################################
+# Packaging (zip/tar) rules
+#################################################################
+bazel_dep(name = "rules_pkg", version = "0.10.1")
+
+
+#################################################################
+# Container rules
+#################################################################
+bazel_dep(name = "rules_oci", version = "1.7.4")
+bazel_dep(name = "container_structure_test", version = "1.16.0")
+bazel_dep(name = "rules_helm", version = "0.4.0")
+
+oci = use_extension("@rules_oci//oci:extensions.bzl", "oci")
+
+# Official linux base image"
+oci.pull(
+    name = "tcubi-cpp",
+    image = "harbor.xcr.svcs01.prod.wv.kaas.sws.siemens.com/lcs-production/tcbaseimages/tcubi-cpp",
+    # Use digest rather than tag to ensure reproducibility
+    digest = "sha256:0efe4e579333519a06a94611db6a5eeba2532a0aef8bd3c28857aa345d4a8973", #tag = "8.8.1_2.3.12"
+    platforms = ["linux/amd64"],
+)
+use_repo(oci, "tcubi-cpp")
+
+# Official linux java image
+oci.pull(
+    name = "tcubi-openjdk",
+    image = "harbor.xcr.svcs01.prod.wv.kaas.sws.siemens.com/lcs-production/tcbaseimages/tcubi-openjdk",
+    # Use digest rather than tag to ensure reproducibility
+    digest = "sha256:748304fc6519d04c7fa5aceb8ec9a3fe7e0f2720bc992053b4feceba895348a1", #tag = "8.8.1_17.0.9_9",
+    platforms = ["linux/amd64"],
+)
+use_repo(oci, "tcubi-openjdk")
+
+
+#################################################################
+# Hermetic Python Toolchain
+# Even if we don't use python, we need to ignore the root user
+# error coming from submodules, so declare it here.
+#################################################################
+bazel_dep(name = "rules_python", version = "0.32.2")
+python = use_extension("@rules_python//python/extensions:python.bzl", "python")
+python.toolchain(
+    python_version = "3.11",
+    is_default = True,
+    ignore_root_user_error = True,
+)
+
+
+#################################################################
+# Pull in external artifacts from Artifactory/DISW Gitlab
+#################################################################
+include("//src/repo/bazel/java:artifacts.MODULE.bazel")

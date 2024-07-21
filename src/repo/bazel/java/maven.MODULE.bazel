@@ -1,0 +1,25 @@
+maven = use_extension("@rules_jvm_external//:extensions.bzl", "maven")
+
+# What new versions are available?
+# bazel run @maven//:outdated
+# What is going wrong in maven_install?
+# set RJE_VERBOSE=true in shell before bazel build to debug
+maven.install(
+    artifacts = [
+        "com.google.guava:guava:28.0-jre",
+        "junit:junit:4.12",
+    ],
+    repositories = [
+        "https://artifacts.industrysoftware.automation.siemens.com/artifactory/tc-maven",
+    ],
+    fail_on_missing_checksum = False,
+    strict_visibility = True,
+    generate_compat_repositories = False,
+    fail_if_repin_required = True,
+    lock_file = "//src/repo/bazel/java:maven_lock.json",
+)
+
+use_repo(
+    maven,
+    "maven",
+)
